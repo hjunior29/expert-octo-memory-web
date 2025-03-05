@@ -1,9 +1,18 @@
 <script>
-    import { Accordion, AccordionItem } from "carbon-components-svelte";
+    import { goto } from "$app/navigation";
+    import { Button, ButtonSet } from "carbon-components-svelte";
 </script>
 
-<Accordion>
-    <AccordionItem title="Section 1" open>Content 1</AccordionItem>
-    <AccordionItem title="Section 2">Content 2</AccordionItem>
-    <AccordionItem title="Section 3">Content 3</AccordionItem>
-</Accordion>
+<div class="flex items-center justify-center h-screen w-full">
+    <div class="w-1/4">
+        <ButtonSet class="flex justify-center">
+            <Button
+                kind="secondary"
+                on:click={() => {
+                    goto("/register");
+                }}>Registro</Button
+            >
+            <Button>Login</Button>
+        </ButtonSet>
+    </div>
+</div>
