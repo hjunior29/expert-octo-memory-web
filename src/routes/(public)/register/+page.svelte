@@ -9,42 +9,50 @@
         ToastNotification,
     } from "carbon-components-svelte";
     import { goto } from "$app/navigation";
+    import type { ApiResponse } from "$lib/models/apiResponse";
 
     let user: User = {};
     let notification: Notification = {};
     let timeout: any = undefined;
 
     async function register() {
-        try {
-            const createdUser = await apiRequest<User>("users", "POST", user);
-            console.log("Usuário registrado:", createdUser);
-        } catch (error) {
-            console.error("Erro ao registrar usuário", error);
+        if (
+            !user.firstName ||
+            !user.lastName ||
+            !user.email ||
+            !user.password
+        ) {
+            return;
+        }
+
+        const response = await apiRequest<ApiResponse<User>>(
+            "users",
+            "POST",
+            user,
+        );
+
+        if (response.status === 201) {
+            notification = {
+                kind: "success",
+                title: "Sucesso",
+                subtitle: response.message,
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        } else {
             notification = {
                 kind: "error",
                 title: "Erro",
-                subtitle: "Erro ao registrar usuário.",
+                subtitle: response.message,
                 caption: new Date().toLocaleString(),
+                timeout: 3_000,
             };
-            timeout = 3_000;
-            showNotification = true;
         }
-
-        notification = {
-            kind: "success",
-            title: "Sucesso",
-            subtitle: "Usuário registrado com sucesso.",
-            caption: new Date().toLocaleString(),
-        };
-        timeout = 3_000;
-        showNotification = true;
 
         setTimeout(() => {
             goto("/login");
         }, 3000);
     }
-
-    $: showNotification = timeout !== undefined;
 </script>
 
 <div class="flex items-center justify-center h-screen w-full">
@@ -92,18 +100,17 @@
     </div>
 </div>
 
-{#if showNotification}
+{#if notification.kind}
     <div
         class="fixed bottom-4 right-4 w-96 transition-opacity duration-300"
         transition:fade
     >
         <ToastNotification
-            {timeout}
-            fullWidth
-            kind="success"
-            title="Sucesso"
-            subtitle="Usuário registrado com sucesso."
-            caption={new Date().toLocaleString()}
+            timeout={notification.timeout}
+            kind={notification.kind}
+            title={notification.title}
+            subtitle={notification.subtitle}
+            caption={notification.caption}
             on:close={(e) => {
                 timeout = undefined;
                 console.log(e.detail.timeout);
