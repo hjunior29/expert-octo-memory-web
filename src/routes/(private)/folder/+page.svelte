@@ -11,12 +11,14 @@
     } from "carbon-components-svelte";
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
+    import FolderIcon from "$lib/components/custom/FolderIcon.svelte";
 
     let folder: Folder = {};
     let folders: Folder[] = [];
     let notification: Notification = {};
     let timeout: any = undefined;
     let openCreateFolderModal: boolean = false;
+    let openEditFolderModal: boolean = false;
 
     onMount(() => {
         getFolders();
@@ -53,9 +55,7 @@
         }
         openCreateFolderModal = false;
 
-        setTimeout(() => {
-            window.location.reload();
-        }, 3000);
+        getFolders();
     }
 
     async function getFolders() {
@@ -77,16 +77,112 @@
             };
         }
     }
+
+    async function editFolder() {
+        if (!folder.name || !folder.id) {
+            folder.name = undefined;
+            return;
+        }
+
+        const response = await apiRequest<ApiResponse<Folder>>(
+            "folders",
+            "PUT",
+            folder,
+            folder.id,
+        );
+
+        if (response.status === 200) {
+            notification = {
+                kind: "success",
+                title: "Sucesso",
+                subtitle: response.message,
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        } else {
+            notification = {
+                kind: "error",
+                title: "Erro",
+                subtitle: response.message,
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        }
+        openEditFolderModal = false;
+
+        getFolders();
+    }
+
+    async function deleteFolder() {
+        if (!folder.id) {
+            folder.id = undefined;
+            return;
+        }
+
+        const response = await apiRequest<ApiResponse<Folder>>(
+            "folders",
+            "DELETE",
+            folder,
+            folder.id,
+        );
+
+        if (response.status === 200) {
+            notification = {
+                kind: "success",
+                title: "Sucesso",
+                subtitle: response.message,
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        } else {
+            notification = {
+                kind: "error",
+                title: "Erro",
+                subtitle: response.message,
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        }
+
+        getFolders();
+    }
+
+    function handleEditFolder({
+        folderId,
+        name,
+    }: {
+        folderId: string;
+        name: string;
+    }) {
+        folder = { id: Number(folderId), name };
+        openEditFolderModal = true;
+    }
+
+    function handleDeleteFolder({ folderId }: { folderId: string }) {
+        folder = { id: Number(folderId) };
+        deleteFolder();
+    }
 </script>
 
 <div class="flex justify-end">
     <Button
         on:click={() => {
             openCreateFolderModal = true;
-        }}>Criar pasta</Button
+        }}>Criar nova pasta</Button
     >
 </div>
-<div></div>
+<div class="mt-10">
+    <div class="w-full flex flex-wrap gap-8">
+        {#each folders as _, i}
+            <FolderIcon
+                folderId={folders[i].id}
+                name={folders[i].name}
+                on:edit={(e) => handleEditFolder(e.detail)}
+                on:delete={(e) => handleDeleteFolder(e.detail)}
+            />
+        {/each}
+    </div>
+</div>
 
 <Modal
     bind:open={openCreateFolderModal}
@@ -94,11 +190,32 @@
     primaryButtonText="Criar"
     secondaryButtonText="Cancelar"
     on:click:button--secondary={() => (openCreateFolderModal = false)}
-    on:open
+    on:open={() => (folder.name = "")}
     on:close
     on:submit={createFolder}
 >
     <p>Você irá criar uma pasta para armazenar seus flashcards.</p>
+    <br />
+    <TextInput
+        invalid={folder.name === undefined}
+        invalidText="Nome da pasta é obrigatório."
+        labelText="Nome da pasta *"
+        placeholder="Digite o nome da pasta...."
+        bind:value={folder.name}
+    />
+</Modal>
+
+<Modal
+    bind:open={openEditFolderModal}
+    modalHeading="Editar Pasta"
+    primaryButtonText="Salvar"
+    secondaryButtonText="Cancelar"
+    on:click:button--secondary={() => (openEditFolderModal = false)}
+    on:open
+    on:close
+    on:submit={editFolder}
+>
+    <p>Você irá editar uma pasta para armazenar seus flashcards.</p>
     <br />
     <TextInput
         invalid={folder.name === undefined}
@@ -122,7 +239,7 @@
             caption={notification.caption}
             on:close={(e) => {
                 timeout = undefined;
-                console.log(e.detail.timeout);
+                notification = {};
             }}
         />
     </div>
