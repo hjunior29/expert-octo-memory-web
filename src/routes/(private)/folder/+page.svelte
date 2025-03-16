@@ -66,7 +66,6 @@
 
         if (response.status === 200) {
             folders = response.data || [];
-            console.log(folders);
         } else {
             notification = {
                 kind: "error",
