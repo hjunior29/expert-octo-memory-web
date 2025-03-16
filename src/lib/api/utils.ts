@@ -7,10 +7,13 @@ interface ApiResponse<T> {
 export async function apiRequest<T>(
     endpoint: string,
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
-    body?: object
+    body?: object,
+    params?: number | string
 ): Promise<T> {
     try {
-        const resquest = await fetch(`api/${endpoint}`, {
+        const url = params ? `api/${endpoint}/${params}` : `api/${endpoint}`;
+
+        const resquest = await fetch(url, {
             method,
             headers: {
                 "Content-Type": "application/json",
