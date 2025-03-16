@@ -212,7 +212,7 @@
     secondaryButtonText="Cancelar"
     on:click:button--secondary={() => (openEditFolderModal = false)}
     on:open
-    on:close
+    on:close={() => (folder.id = undefined)}
     on:submit={editFolder}
 >
     <p>Você irá editar uma pasta para armazenar seus flashcards.</p>
