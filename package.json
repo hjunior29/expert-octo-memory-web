@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"@types/node": "^22.13.9",
-		"carbon-components-svelte": "^0.87.6"
+		"carbon-components-svelte": "^0.87.6",
+		"carbon-icons-svelte": "^13.3.0"
 	}
 }
