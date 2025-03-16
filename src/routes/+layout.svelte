@@ -10,13 +10,12 @@
 		HeaderPanelLink,
 		SideNav,
 		SideNavItems,
-		SideNavMenu,
-		SideNavMenuItem,
 		SideNavLink,
 		SkipToContent,
 		Content,
 	} from "carbon-components-svelte";
 	import { expoIn } from "svelte/easing";
+	import { goto } from "$app/navigation";
 	let isSideNavOpen: boolean = false;
 	let isOpen: boolean = false;
 	let url: string = "";
@@ -57,17 +56,18 @@
 
 	<SideNav bind:isOpen={isSideNavOpen}>
 		<SideNavItems>
-			<SideNavLink text="Link 1" />
-			<SideNavLink text="Link 2" />
-			<SideNavLink text="Link 3" />
-			<SideNavMenu text="Menu">
-				<SideNavMenuItem href="/" text="Link 1" />
-				<SideNavMenuItem href="/" text="Link 2" />
-				<SideNavMenuItem href="/" text="Link 3" />
-			</SideNavMenu>
+			<SideNavLink
+				text="Dashboard"
+				on:click={() => goto("/dashboard")}
+				class="cursor-pointer"
+			/>
+			<SideNavLink
+				text="Pastas"
+				on:click={() => goto("/folder")}
+				class="cursor-pointer"
+			/>
 		</SideNavItems>
 	</SideNav>
-
 	<Content>
 		<slot />
 	</Content>
