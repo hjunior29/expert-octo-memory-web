@@ -11,8 +11,7 @@ export async function apiRequest<T>(
     params?: number | string
 ): Promise<T> {
     try {
-        const url = params ? `api/${endpoint}/${params}` : `api/${endpoint}`;
-
+        const url = params ? `/api/${endpoint}/${params}` : `/api/${endpoint}`;
         const resquest = await fetch(url, {
             method,
             headers: {
