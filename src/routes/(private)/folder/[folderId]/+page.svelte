@@ -47,8 +47,6 @@
         getTopics();
     });
 
-    async function createTopic() {}
-
     async function getTopics() {
         const response = await apiRequest<ApiResponse<TopicAndFlashcards>>(
             "folders/" + folderId + "/topics",
