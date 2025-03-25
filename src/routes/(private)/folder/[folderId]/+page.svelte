@@ -137,7 +137,7 @@
             dataType = "link";
         } else if (flashcardGenerate.topic) {
             dataType = "topic";
-        } else if (files.length) {
+        } else if (files.length > 0) {
             dataType = "file";
         }
 
@@ -184,14 +184,13 @@
     }
 
     async function handleFileUpload() {
-        if (files.length > 0) {
-            const base64Files = await Promise.all(
-                files.map((file) => fileToBase64(file)),
-            );
-            flashcardGenerate.files = base64Files.map((file) => ({
-                base64: file,
-            }));
-        }
+        if (!files.length) return;
+        flashcardGenerate.files = await Promise.all(
+            files.map(async (file) => ({
+                name: file.name,
+                base64: await fileToBase64(file),
+            })),
+        );
     }
 </script>
 
@@ -260,6 +259,7 @@
                     invalidText="Link é obrigatório."
                     labelText="Link *"
                     placeholder="Cole o link..."
+                    bind:value={flashcardGenerate.link}
                 />
             </TabContent>
             <TabContent>
@@ -270,6 +270,7 @@
                     invalidText="Texto é obrigatório."
                     labelText="Texto"
                     placeholder="Escreva sobre o assunto..."
+                    bind:value={flashcardGenerate.topic}
                 />
             </TabContent>
             <TabContent>
@@ -278,8 +279,7 @@
                 </div>
                 <FileUploader
                     bind:this={fileUploader}
-                    multiple
-                    labelTitle="Upload files"
+                    labelTitle="Upload file"
                     buttonLabel="Adicionar arquivo"
                     labelDescription="Clique para adicionar"
                     accept={[".pdf", ".docx", ".jpg", ".jpeg", ".png", ".mp3"]}
@@ -287,7 +287,7 @@
                     bind:files
                     on:add={handleFileUpload}
                 />
-                {#if files.length}
+                {#if files.length > 0}
                     <br />
                     <Button
                         size="small"

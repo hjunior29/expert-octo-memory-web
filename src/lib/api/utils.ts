@@ -12,7 +12,7 @@ export async function apiRequest<T>(
 ): Promise<T> {
     try {
         const url = params ? `/api/${endpoint}/${params}` : `/api/${endpoint}`;
-        const resquest = await fetch(url, {
+        const request = await fetch(url, {
             method,
             headers: {
                 "Content-Type": "application/json",
@@ -20,11 +20,17 @@ export async function apiRequest<T>(
             body: method !== "GET" && body ? JSON.stringify(body) : undefined,
         });
 
-        if (!resquest.ok) {
-            throw new Error(`Erro: ${resquest.status} - ${resquest.statusText}`);
+        if (!request.ok) {
+            const response: ApiResponse<T> = {
+                status: request.status,
+                message: request.statusText,
+                data: undefined
+            }
+
+            return response as T;
         }
 
-        const apiResponse = await resquest.json();
+        const apiResponse = await request.json();
 
         const response: ApiResponse<T> = {
             status: apiResponse.status,
