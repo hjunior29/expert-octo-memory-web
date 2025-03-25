@@ -203,6 +203,8 @@
     >
 </div>
 
+<br />
+
 <div class="mt-10">
     <div class="w-full flex flex-wrap gap-8">
         {#each topics as _, i}
