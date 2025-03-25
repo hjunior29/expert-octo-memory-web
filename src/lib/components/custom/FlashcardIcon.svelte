@@ -34,13 +34,13 @@
             <OverflowMenu size="sm">
                 <OverflowMenuItem
                     text="Editar"
-                    on:click={() => dispatch("edit", { folderId, name })}
+                    on:click={() => dispatch("edit", { topicId, name })}
                 />
                 <OverflowMenuItem
                     primaryFocus
                     danger
                     text="Deletar"
-                    on:click={() => dispatch("delete", { folderId })}
+                    on:click={() => dispatch("delete", { topicId })}
                 />
             </OverflowMenu>
         </div>
