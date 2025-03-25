@@ -225,7 +225,10 @@
     secondaryButtonText="Cancelar"
     on:click:button--secondary={() => (openGenerateFlashcardsModal = false)}
     on:open
-    on:close
+    on:close={() => {
+        flashcardGenerate = {};
+        files = [];
+    }}
     on:submit={generateFlashcards}
 >
     <p>
