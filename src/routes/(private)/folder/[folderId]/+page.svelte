@@ -24,7 +24,7 @@
     import type { Flashcard, FlashcardGenerate } from "$lib/models/flashcard";
     import { fileToBase64 } from "$lib/utils";
 
-    type TopicAndFlashcards = {
+    type FolderAndTopics = {
         folder: Folder;
         topics: Topic[];
     };
@@ -48,7 +48,7 @@
     });
 
     async function getTopics() {
-        const response = await apiRequest<ApiResponse<TopicAndFlashcards>>(
+        const response = await apiRequest<ApiResponse<FolderAndTopics>>(
             "folders/" + folderId + "/topics",
             "GET",
         );

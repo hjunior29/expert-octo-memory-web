@@ -6,7 +6,7 @@ export class Flashcard {
     title?: string;
     question?: string;
     answer?: string;
-    folderId?: string;
+    topicId?: number;
     tags?: string[];
     difficulty?: string;
     lastReviewed?: Date;

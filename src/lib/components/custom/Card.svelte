@@ -21,39 +21,39 @@
         : "Never";
 </script>
 
-<button on:click={() => goto(`/flashcard/${flashcardId}`)} aria-label={title}>
-    <div
-        class="border rounded shadow-md bg-gray-600 w-72 cursor-pointer p-2 hover:scale-105 transition-transform duration-200"
+<div
+    class="relative w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-5 transition-transform hover:scale-[1.03] cursor-pointer"
+>
+    <button
+        on:click={() => dispatch("open", { flashcardId })}
+        class="w-full text-left flex flex-col gap-3"
+        aria-label={title}
     >
-        <div class="flex flex-col items-start gap-2">
-            <span class="!p-4 !text-lg !font-bold">{title}</span>
+        <h2 class="!p-2 !text-lg font-semibold leading-snug">
+            {title}
+        </h2>
 
-            <div class="!mr-2 flex flex-row gap-1">
-                {#each tags as tag}
-                    <Tag type="blue">{tag}</Tag>
-                {/each}
-            </div>
-
-            <div class="flex flex-col gap-1 !mr-2">
-                <Tag type="green">Difficulty: {difficulty}</Tag>
-                <Tag type="teal">Review Count: {reviewCount}</Tag>
-                <Tag type="warm-gray">Last Reviewed: {formattedDate}</Tag>
-            </div>
+        <div class="flex flex-wrap gap-2">
+            {#each tags as tag}
+                <Tag type="blue" class="!text-sm">{tag}</Tag>
+            {/each}
         </div>
 
-        <div class="flex justify-end">
-            <OverflowMenu size="sm" class="rounded-lg">
-                <OverflowMenuItem
-                    text="Editar"
-                    on:click={() => dispatch("edit", { flashcardId, title })}
-                />
-                <OverflowMenuItem
-                    primaryFocus
-                    danger
-                    text="Deletar"
-                    on:click={() => dispatch("delete", { flashcardId })}
-                />
-            </OverflowMenu>
+        <div
+            class="!p-2 flex flex-col gap-1 mt-2 text-sm text-gray-700 dark:text-gray-300"
+        >
+            <div class="flex justify-between">
+                <span class="font-medium">Dificuldade:</span>
+                <Tag type="green">{difficulty}</Tag>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-medium">Revisões:</span>
+                <Tag type="teal">{reviewCount || 0}</Tag>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-medium">Última revisão:</span>
+                <Tag type="warm-gray">{formattedDate}</Tag>
+            </div>
         </div>
-    </div>
-</button>
+    </button>
+</div>
