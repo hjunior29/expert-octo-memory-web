@@ -4,6 +4,8 @@
     import type { Folder } from "$lib/models/folder";
     import type { Notification } from "$lib/models/notification";
     import {
+        Breadcrumb,
+        BreadcrumbItem,
         Button,
         Modal,
         TextInput,
@@ -12,6 +14,11 @@
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
     import FolderIcon from "$lib/components/custom/FolderIcon.svelte";
+    import { generateBreadcrumbPaths } from "$lib/utils";
+
+    const pathname =
+        typeof window !== "undefined" ? window.location.pathname : "";
+    const breadcrumbItems = generateBreadcrumbPaths(pathname);
 
     let folder: Folder = {};
     let folders: Folder[] = [];
@@ -163,7 +170,14 @@
     }
 </script>
 
-<div class="flex justify-end">
+<div class="flex justify-between items-center">
+    <Breadcrumb>
+        {#each breadcrumbItems as item (item.href)}
+            <BreadcrumbItem href={item.href} isCurrentPage={item.isCurrent}>
+                {item.label}
+            </BreadcrumbItem>
+        {/each}
+    </Breadcrumb>
     <Button
         on:click={() => {
             openCreateFolderModal = true;

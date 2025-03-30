@@ -8,6 +8,8 @@
     import type { Notification } from "$lib/models/notification";
     import type { Topic } from "$lib/models/topic";
     import {
+        Breadcrumb,
+        BreadcrumbItem,
         Button,
         Dropdown,
         Modal,
@@ -17,6 +19,11 @@
     } from "carbon-components-svelte";
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
+    import { generateBreadcrumbPaths } from "$lib/utils";
+
+    const pathname =
+        typeof window !== "undefined" ? window.location.pathname : "";
+    const breadcrumbItems = generateBreadcrumbPaths(pathname);
 
     type TopicAndFlashcards = {
         topic: Topic;
@@ -133,7 +140,14 @@
     }
 </script>
 
-<div class="flex justify-end">
+<div class="flex justify-between items-center">
+    <Breadcrumb>
+        {#each breadcrumbItems as item (item.href)}
+            <BreadcrumbItem href={item.href} isCurrentPage={item.isCurrent}>
+                {item.label}
+            </BreadcrumbItem>
+        {/each}
+    </Breadcrumb>
     <Button
         on:click={() => {
             goto(topicId + "/study");

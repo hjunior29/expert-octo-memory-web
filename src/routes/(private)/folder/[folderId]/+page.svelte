@@ -3,6 +3,8 @@
     import type { ApiResponse } from "$lib/models/apiResponse";
     import type { Notification } from "$lib/models/notification";
     import {
+        Breadcrumb,
+        BreadcrumbItem,
         Button,
         FileUploader,
         Modal,
@@ -22,7 +24,11 @@
     import FlashcardIcon from "$lib/components/custom/FlashcardIcon.svelte";
     import { AiGenerate } from "carbon-icons-svelte";
     import type { Flashcard, FlashcardGenerate } from "$lib/models/flashcard";
-    import { fileToBase64 } from "$lib/utils";
+    import { fileToBase64, generateBreadcrumbPaths } from "$lib/utils";
+
+    const pathname =
+        typeof window !== "undefined" ? window.location.pathname : "";
+    const breadcrumbItems = generateBreadcrumbPaths(pathname);
 
     type FolderAndTopics = {
         folder: Folder;
@@ -205,7 +211,14 @@
     }
 </script>
 
-<div class="flex justify-end">
+<div class="flex justify-between items-center">
+    <Breadcrumb>
+        {#each breadcrumbItems as item (item.href)}
+            <BreadcrumbItem href={item.href} isCurrentPage={item.isCurrent}>
+                {item.label}
+            </BreadcrumbItem>
+        {/each}
+    </Breadcrumb>
     <Button
         icon={AiGenerate}
         on:click={() => {
