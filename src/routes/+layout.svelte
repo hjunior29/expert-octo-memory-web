@@ -16,20 +16,18 @@
 	} from "carbon-components-svelte";
 	import { expoIn } from "svelte/easing";
 	import { goto } from "$app/navigation";
+	import { page } from "$app/stores";
+
 	let isSideNavOpen: boolean = false;
 	let isOpen: boolean = false;
-	let url: string = "";
-
-	$: if (typeof window !== "undefined") {
-		url = window.location.href;
-	}
 </script>
 
-{#if url != "/login" && url != "/register"}
+{#if $page.url.pathname != "/login" && $page.url.pathname != "/register" && $page.url.pathname != "/"}
 	<Header
 		persistentHamburgerMenu={true}
 		company="EXPERT"
 		platformName="Octo Memory"
+		href="/"
 		bind:isSideNavOpen
 	>
 		<svelte:fragment slot="skip-to-content">
@@ -57,11 +55,6 @@
 	<SideNav bind:isOpen={isSideNavOpen}>
 		<SideNavItems>
 			<SideNavLink
-				text="Dashboard"
-				on:click={() => goto("/dashboard")}
-				class="cursor-pointer"
-			/>
-			<SideNavLink
 				text="Pastas"
 				on:click={() => goto("/folder")}
 				class="cursor-pointer"
@@ -72,5 +65,9 @@
 		<slot />
 	</Content>
 {:else}
-	<slot />
+	<Header company="EXPERT" platformName="Octo Memory" href="/"></Header>
+
+	<Content>
+		<slot />
+	</Content>
 {/if}

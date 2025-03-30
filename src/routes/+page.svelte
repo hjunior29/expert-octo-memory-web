@@ -12,7 +12,12 @@
                     goto("/register");
                 }}>Registro</Button
             >
-            <Button>Login</Button>
+            <Button
+                kind="primary"
+                on:click={() => {
+                    goto("/login");
+                }}>Login</Button
+            >
         </ButtonSet>
     </div>
 </div>
