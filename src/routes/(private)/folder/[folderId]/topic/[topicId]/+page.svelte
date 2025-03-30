@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { page } from "$app/state";
     import { apiRequest } from "$lib/api/utils";
     import Card from "$lib/components/custom/Card.svelte";
@@ -38,7 +39,7 @@
 
     async function getFlashcards() {
         const response = await apiRequest<ApiResponse<TopicAndFlashcards>>(
-            "topics/" + topicId + "/flashcards",
+            `topics/${topicId}/flashcards`,
             "GET",
         );
 
@@ -133,7 +134,11 @@
 </script>
 
 <div class="flex justify-end">
-    <Button on:click={() => {}}>Estudar tópico</Button>
+    <Button
+        on:click={() => {
+            goto(topicId + "/study");
+        }}>Estudar tópico</Button
+    >
 </div>
 
 <br />
