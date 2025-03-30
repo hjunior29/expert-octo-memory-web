@@ -7,6 +7,7 @@
     import type { User } from "$lib/models/user";
     import {
         Button,
+        ButtonSet,
         TextInput,
         ToastNotification,
     } from "carbon-components-svelte";
@@ -44,7 +45,7 @@
     }
 </script>
 
-<div class="flex items-center justify-center h-screen w-full">
+<div class="flex items-center justify-center !mt-20 w-full">
     <div class="w-1/4 flex flex-col gap-4">
         <TextInput
             invalid={user.email === undefined}
@@ -61,9 +62,15 @@
             type="password"
             bind:value={user.password}
         />
-        <div class="w-full">
+        <ButtonSet class="flex justify-center !gap-3">
+            <Button
+                kind="secondary"
+                on:click={() => {
+                    goto("/register");
+                }}>Registro</Button
+            >
             <Button on:click={login}>Login</Button>
-        </div>
+        </ButtonSet>
     </div>
 </div>
 

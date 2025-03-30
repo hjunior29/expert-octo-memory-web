@@ -10,6 +10,7 @@
     } from "carbon-components-svelte";
     import { goto } from "$app/navigation";
     import type { ApiResponse } from "$lib/models/apiResponse";
+    import { formatPhoneNumber } from "$lib/utils";
 
     let user: User = {};
     let notification: Notification = {};
@@ -59,7 +60,7 @@
     }
 </script>
 
-<div class="flex items-center justify-center h-screen w-full">
+<div class="flex items-center justify-center !mt-20 w-full">
     <div class="w-1/4 flex flex-col gap-4">
         <div class="flex justify-between gap-4">
             <TextInput
@@ -82,6 +83,8 @@
             labelText="Número de telefone"
             placeholder="Digite seu número aqui..."
             bind:value={user.phoneNumber}
+            on:input={() =>
+                (user.phoneNumber = formatPhoneNumber(user.phoneNumber || ""))}
         />
         <TextInput
             invalid={user.email === undefined}
@@ -98,7 +101,7 @@
             type="password"
             bind:value={user.password}
         />
-        <div class="w-full">
+        <div class="flex justify-end">
             <Button on:click={register}>Registrar</Button>
         </div>
     </div>

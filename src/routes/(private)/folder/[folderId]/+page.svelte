@@ -7,6 +7,7 @@
         BreadcrumbItem,
         Button,
         FileUploader,
+        Loading,
         Modal,
         ProgressBar,
         Tab,
@@ -46,6 +47,7 @@
     let openGenerateFlashcardsModal: boolean = false;
     let openEditTopicModal: boolean = false;
     let isGeneratingFlashcards: boolean = false;
+    let isLoading: boolean = false;
 
     let folderId = page.params.folderId;
 
@@ -54,6 +56,8 @@
     });
 
     async function getTopics() {
+        isLoading = true;
+
         const response = await apiRequest<ApiResponse<FolderAndTopics>>(
             "folders/" + folderId + "/topics",
             "GET",
@@ -71,6 +75,8 @@
                 timeout: 3_000,
             };
         }
+
+        isLoading = false;
     }
 
     async function editTopic() {
@@ -229,19 +235,32 @@
 
 <br />
 
-<div class="mt-10">
-    <div class="w-full flex flex-wrap gap-8">
-        {#each topics as _, i}
-            <FlashcardIcon
-                folderId={folder.id!}
-                topicId={topics[i].id}
-                name={topics[i].name}
-                on:edit={(e) => handleEditTopic(e.detail)}
-                on:delete={(e) => handleDeleteTopic(e.detail)}
-            />
-        {/each}
+{#if isLoading}
+    <div class="flex justify-center items-center w-full h-full">
+        <Loading />
     </div>
-</div>
+{:else if topics.length === 0}
+    <div class="flex flex-col items-center justify-center w-full !mt-20">
+        <h1 class="!font-thin">Nenhum tópico encontrado</h1>
+        <p class="!font-thin">
+            Gere um novo tópico para armazenar seus flashcards.
+        </p>
+    </div>
+{:else}
+    <div class="mt-10">
+        <div class="w-full flex flex-wrap gap-8">
+            {#each topics as _, i}
+                <FlashcardIcon
+                    folderId={folder.id!}
+                    topicId={topics[i].id}
+                    name={topics[i].name}
+                    on:edit={(e) => handleEditTopic(e.detail)}
+                    on:delete={(e) => handleDeleteTopic(e.detail)}
+                />
+            {/each}
+        </div>
+    </div>
+{/if}
 
 <Modal
     bind:open={openGenerateFlashcardsModal}

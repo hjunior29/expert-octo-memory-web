@@ -7,6 +7,7 @@
         Breadcrumb,
         BreadcrumbItem,
         Button,
+        Loading,
         Modal,
         TextInput,
         ToastNotification,
@@ -26,10 +27,34 @@
     let timeout: any = undefined;
     let openCreateFolderModal: boolean = false;
     let openEditFolderModal: boolean = false;
+    let isLoading: boolean = false;
 
     onMount(() => {
         getFolders();
     });
+
+    async function getFolders() {
+        isLoading = true;
+
+        const response = await apiRequest<ApiResponse<Folder[]>>(
+            "folders",
+            "GET",
+        );
+
+        if (response.status === 200) {
+            folders = response.data || [];
+        } else {
+            notification = {
+                kind: "error",
+                title: "Erro",
+                subtitle: response.message,
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        }
+
+        isLoading = false;
+    }
 
     async function createFolder() {
         if (!folder.name) {
@@ -63,25 +88,6 @@
         openCreateFolderModal = false;
 
         getFolders();
-    }
-
-    async function getFolders() {
-        const response = await apiRequest<ApiResponse<Folder[]>>(
-            "folders",
-            "GET",
-        );
-
-        if (response.status === 200) {
-            folders = response.data || [];
-        } else {
-            notification = {
-                kind: "error",
-                title: "Erro",
-                subtitle: response.message,
-                caption: new Date().toLocaleString(),
-                timeout: 3_000,
-            };
-        }
     }
 
     async function editFolder() {
@@ -184,18 +190,34 @@
         }}>Criar nova pasta</Button
     >
 </div>
-<div class="mt-10">
-    <div class="w-full flex flex-wrap gap-8">
-        {#each folders as _, i}
-            <FolderIcon
-                folderId={folders[i].id}
-                name={folders[i].name}
-                on:edit={(e) => handleEditFolder(e.detail)}
-                on:delete={(e) => handleDeleteFolder(e.detail)}
-            />
-        {/each}
+
+<br />
+
+{#if isLoading}
+    <div class="flex justify-center items-center w-full h-screen">
+        <Loading />
     </div>
-</div>
+{:else if folders.length === 0}
+    <div class="flex flex-col items-center justify-center w-full !mt-20">
+        <h1 class="!font-thin">Nenhuma pasta encontrada</h1>
+        <p class="!font-thin">
+            Crie uma nova pasta para armazenar seus tópicos de flashcards.
+        </p>
+    </div>
+{:else}
+    <div class="mt-10">
+        <div class="w-full flex flex-wrap gap-8">
+            {#each folders as _, i}
+                <FolderIcon
+                    folderId={folders[i].id}
+                    name={folders[i].name}
+                    on:edit={(e) => handleEditFolder(e.detail)}
+                    on:delete={(e) => handleDeleteFolder(e.detail)}
+                />
+            {/each}
+        </div>
+    </div>
+{/if}
 
 <Modal
     bind:open={openCreateFolderModal}

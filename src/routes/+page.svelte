@@ -3,9 +3,9 @@
     import { Button, ButtonSet } from "carbon-components-svelte";
 </script>
 
-<div class="flex items-center justify-center h-screen w-full">
+<div class="flex items-center justify-center !mt-20 w-full">
     <div class="w-1/4">
-        <ButtonSet class="flex justify-center">
+        <ButtonSet class="flex justify-center !gap-3">
             <Button
                 kind="secondary"
                 on:click={() => {
