@@ -141,6 +141,17 @@
             dataType = "file";
         }
 
+        if (dataType === "") {
+            notification = {
+                kind: "error",
+                title: "Erro",
+                subtitle: "Selecione um tipo de dado para gerar flashcards.",
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+            return;
+        }
+
         openGenerateFlashcardsModal = false;
         isGeneratingFlashcards = true;
 
@@ -234,9 +245,9 @@
     on:submit={generateFlashcards}
 >
     <p>
-        Você pode gerar flashcards a partir de links de sites, vídeos do
-        YouTube, vídeos enviados à plataforma ou apenas descrevendo o assunto
-        que deseja.
+        Você pode gerar flashcards a partir de texto, link de sites ou link
+        vídeos do YouTube, descrevendo o assunto que deseja, ou enviando
+        arquivos à plataforma (PDF, png ou jpeg, DOCX, mp3).
     </p>
     <br />
     <Tabs type="container">
@@ -251,7 +262,7 @@
                 </div>
                 <TextArea
                     invalidText="Texto é obrigatório."
-                    labelText="Texto *"
+                    labelText="Texto"
                     placeholder="Cole o texto..."
                     bind:value={flashcardGenerate.text}
                 />
@@ -262,19 +273,19 @@
                 </div>
                 <TextInput
                     invalidText="Link é obrigatório."
-                    labelText="Link *"
+                    labelText="Link"
                     placeholder="Cole o link..."
                     bind:value={flashcardGenerate.link}
                 />
             </TabContent>
             <TabContent>
                 <div>
-                    <p>Escreva sobre o assunto.</p>
+                    <p>Escreva sobre um assunto.</p>
                 </div>
                 <TextInput
                     invalidText="Texto é obrigatório."
                     labelText="Texto"
-                    placeholder="Escreva sobre o assunto..."
+                    placeholder="Escreva sobre um assunto..."
                     bind:value={flashcardGenerate.topic}
                 />
             </TabContent>

@@ -1,10 +1,5 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
-    import {
-        OverflowMenu,
-        OverflowMenuItem,
-        Tag,
-    } from "carbon-components-svelte";
+    import { Tag } from "carbon-components-svelte";
     import { createEventDispatcher } from "svelte";
 
     export let flashcardId: number = 0;

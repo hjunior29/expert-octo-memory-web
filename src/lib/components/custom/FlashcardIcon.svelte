@@ -1,7 +1,12 @@
 <script lang="ts">
-    import flashcardIcon from "./flashcard.png";
+    import flashcardIcon from "../../static/images/flashcard.png";
     import { goto } from "$app/navigation";
-    import { OverflowMenu, OverflowMenuItem } from "carbon-components-svelte";
+    import {
+        OverflowMenu,
+        OverflowMenuItem,
+        TooltipDefinition,
+        TooltipIcon,
+    } from "carbon-components-svelte";
     import { createEventDispatcher } from "svelte";
 
     export let folderId: number = 0;
@@ -16,16 +21,23 @@
         on:click={() => goto(`/folder/${folderId}/topic/${topicId}`)}
         aria-label={name}
     >
-        <div
-            class="cursor-pointer p-2 rounded hover:scale-105 transition-transform duration-200"
-        >
-            <img src={flashcardIcon} alt="Flashcard" />
-        </div>
+        <TooltipIcon tooltipText={name}>
+            <div
+                class="cursor-pointer p-2 rounded hover:scale-105 transition-transform duration-200"
+            >
+                <img
+                    src={flashcardIcon}
+                    alt="Flashcard"
+                    width="144"
+                    height="144"
+                />
+            </div>
+        </TooltipIcon>
     </button>
     <div class="text-xs flex gap-4 items-center justify-between w-36">
         <button
             type="button"
-            class="cursor-pointer truncate bg-transparent border-none p-0"
+            class="cursor-pointer truncate bg-transparent border-none h-4"
             on:click={() => goto(`/folder/${folderId}/topic/${topicId}`)}
             aria-label={name}>{name}</button
         >
