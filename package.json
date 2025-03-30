@@ -12,6 +12,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
+		"@flydotio/dockerfile": "^0.7.9",
 		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
@@ -25,6 +26,8 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@sveltejs/adapter-node": "^5.2.12",
+		"@sveltejs/adapter-static": "^3.0.8",
 		"@types/node": "^22.13.9",
 		"carbon-components-svelte": "^0.87.6",
 		"carbon-icons-svelte": "^13.3.0"

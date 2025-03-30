@@ -1,3 +1,5 @@
+import { env } from '$env/dynamic/public';
+
 interface ApiResponse<T> {
     status: number;
     message: string;
@@ -31,7 +33,14 @@ export async function apiRequest<T>(
             return response as T;
         }
 
-        const url = params ? `/api/${endpoint}/${params}` : `/api/${endpoint}`;
+        let url: string = "";
+        if (process.env.NODE_ENV === "production") {
+            const baseUrl = `${env.PUBLIC_API_URL}`;
+            url = params ? `${baseUrl}/api/${endpoint}/${params}` : `${baseUrl}/api/${endpoint}`;
+        } else {
+            url = params ? `/api/${endpoint}/${params}` : `/api/${endpoint}`;
+        }
+
         const request = await fetch(url, {
             method,
             headers: {
