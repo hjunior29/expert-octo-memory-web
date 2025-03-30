@@ -22,11 +22,15 @@
             !user.email ||
             !user.password
         ) {
+            user.firstName = undefined;
+            user.lastName = undefined;
+            user.email = undefined;
+            user.password = undefined;
             return;
         }
 
         const response = await apiRequest<ApiResponse<User>>(
-            "users",
+            "auth/register",
             "POST",
             user,
         );
@@ -59,14 +63,14 @@
     <div class="w-1/4 flex flex-col gap-4">
         <div class="flex justify-between gap-4">
             <TextInput
-                invalid={user.firstName === ""}
+                invalid={user.firstName === undefined}
                 invalidText="Primeiro nome é obrigatório."
                 labelText="Primeiro Nome"
                 placeholder="Digite seu primeiro nome..."
                 bind:value={user.firstName}
             />
             <TextInput
-                invalid={user.lastName === ""}
+                invalid={user.lastName === undefined}
                 invalidText="Último nome é obrigatório."
                 labelText="Último Nome"
                 placeholder="Digite seu último nome..."
@@ -80,14 +84,14 @@
             bind:value={user.phoneNumber}
         />
         <TextInput
-            invalid={user.email === ""}
+            invalid={user.email === undefined}
             invalidText="E-mail é obrigatório."
             labelText="E-mail"
             placeholder="Digite seu e-mail...."
             bind:value={user.email}
         />
         <TextInput
-            invalid={user.password === ""}
+            invalid={user.password === undefined}
             invalidText="Senha é obrigatória."
             labelText="Senha"
             placeholder="Digite sua senha..."

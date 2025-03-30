@@ -11,16 +11,42 @@ export async function apiRequest<T>(
     params?: number | string
 ): Promise<T> {
     try {
+        const publicRoutes = [
+            "auth/login",
+            "auth/register",
+            "auth/verify",
+        ];
+        const token = localStorage.getItem("token");
+
+        if (!publicRoutes.includes(endpoint) && !token) {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+
+            const response: ApiResponse<T> = {
+                status: 401,
+                message: "Token não informado",
+                data: undefined,
+            };
+
+            return response as T;
+        }
+
         const url = params ? `/api/${endpoint}/${params}` : `/api/${endpoint}`;
         const request = await fetch(url, {
             method,
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
             body: method !== "GET" && body ? JSON.stringify(body) : undefined,
         });
 
         if (!request.ok) {
+            if (request.status === 401) {
+                localStorage.removeItem("token");
+                window.location.href = "/login";
+            }
+
             const response: ApiResponse<T> = {
                 status: request.status,
                 message: request.statusText,
