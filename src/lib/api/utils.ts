@@ -14,6 +14,7 @@ export async function apiRequest<T>(
 ): Promise<T> {
     try {
         const publicRoutes = [
+            "ping",
             "auth/login",
             "auth/register",
             "auth/verify",
