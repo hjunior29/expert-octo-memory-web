@@ -43,6 +43,14 @@
 
         if (response.status === 200) {
             folders = response.data || [];
+        } else if (response.status === 404) {
+            notification = {
+                kind: "info",
+                title: "Sem pastas",
+                subtitle: "Nenhuma pasta encontrada.",
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
         } else {
             notification = {
                 kind: "error",

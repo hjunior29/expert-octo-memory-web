@@ -3,24 +3,53 @@
 	import "carbon-components-svelte/css/g100.css";
 	import {
 		Header,
-		HeaderUtilities,
-		HeaderAction,
-		HeaderPanelLinks,
-		HeaderPanelDivider,
-		HeaderPanelLink,
 		SideNav,
 		SideNavItems,
 		SideNavLink,
-		SkipToContent,
 		Content,
 	} from "carbon-components-svelte";
-	import { expoIn } from "svelte/easing";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
+	import { browser } from "$app/environment";
 
 	let isSideNavOpen: boolean = false;
-	let isOpen: boolean = false;
+	let title: string = "OCTO 🚀";
+
+	$: path = $page.url.pathname;
+	$: if (browser) {
+		switch (true) {
+			case path === "/":
+				title = "OCTO 🚀";
+				break;
+			case path === "/login":
+				title = "Login | OCTO 🚀";
+				break;
+			case path === "/register":
+				title = "Registro | OCTO 🚀";
+				break;
+			case path === "/folder":
+				title = "Pastas | OCTO 🚀";
+				break;
+			case path.includes("/folder/") && !path.includes("/topic/"):
+				title = "Tópicos | OCTO 🚀";
+				break;
+			case path.includes("/topic/") &&
+				!path.includes("/flashcard/") &&
+				!path.includes("/study"):
+				title = "Flashcards | OCTO 🚀";
+				break;
+			case path.includes("/study"):
+				title = "Estudo | OCTO 🚀";
+				break;
+			default:
+				title = "OCTO 🚀";
+		}
+	}
 </script>
+
+<svelte:head>
+	<title>{title}</title>
+</svelte:head>
 
 {#if $page.url.pathname != "/login" && $page.url.pathname != "/register" && $page.url.pathname != "/"}
 	<Header
@@ -29,29 +58,7 @@
 		platformName="Octo Memory"
 		href="/"
 		bind:isSideNavOpen
-	>
-		<svelte:fragment slot="skip-to-content">
-			<SkipToContent />
-		</svelte:fragment>
-		<HeaderUtilities>
-			<HeaderAction
-				bind:isOpen
-				transition={{ duration: 6000, delay: 500, easing: expoIn }}
-			>
-				<HeaderPanelLinks>
-					<HeaderPanelDivider>Switcher subject 1</HeaderPanelDivider>
-					<HeaderPanelLink>Switcher item 1</HeaderPanelLink>
-					<HeaderPanelDivider>Switcher subject 2</HeaderPanelDivider>
-					<HeaderPanelLink>Switcher item 1</HeaderPanelLink>
-					<HeaderPanelLink>Switcher item 2</HeaderPanelLink>
-					<HeaderPanelLink>Switcher item 3</HeaderPanelLink>
-					<HeaderPanelLink>Switcher item 4</HeaderPanelLink>
-					<HeaderPanelLink>Switcher item 5</HeaderPanelLink>
-				</HeaderPanelLinks>
-			</HeaderAction>
-		</HeaderUtilities>
-	</Header>
-
+	></Header>
 	<SideNav bind:isOpen={isSideNavOpen}>
 		<SideNavItems>
 			<SideNavLink
@@ -66,7 +73,6 @@
 	</Content>
 {:else}
 	<Header company="EXPERT" platformName="Octo Memory" href="/"></Header>
-
 	<Content>
 		<slot />
 	</Content>

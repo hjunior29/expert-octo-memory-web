@@ -52,14 +52,22 @@ export async function apiRequest<T>(
         });
 
         if (!request.ok) {
-            if (request.status === 401) {
+            if (request.status === 401 && !window.location.href.includes("/login")) {
                 localStorage.removeItem("token");
                 window.location.href = "/login";
+
+                const response: ApiResponse<T> = {
+                    status: 401,
+                    message: "Token inválido ou expirado",
+                    data: undefined,
+                };
+
+                return response as T;
             }
 
             const response: ApiResponse<T> = {
                 status: request.status,
-                message: request.statusText,
+                message: "Erro ao fazer a requisição",
                 data: undefined
             }
 

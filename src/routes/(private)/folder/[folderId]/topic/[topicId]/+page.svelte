@@ -53,6 +53,14 @@
         if (response.status === 200) {
             topic = response.data?.topic || {};
             flashcards = response.data?.flashcards || [];
+        } else if (response.status === 404) {
+            notification = {
+                kind: "info",
+                title: "Sem flashcards",
+                subtitle: "Nenhuma flashcard encontrado.",
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
         } else {
             notification = {
                 kind: "error",

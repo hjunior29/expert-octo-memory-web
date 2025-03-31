@@ -66,6 +66,14 @@
         if (response.status === 200) {
             folder = response.data?.folder || {};
             topics = response.data?.topics || [];
+        } else if (response.status === 404) {
+            notification = {
+                kind: "info",
+                title: "Sem tópicos",
+                subtitle: "Nenhuma tópico encontrado.",
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
         } else {
             notification = {
                 kind: "error",

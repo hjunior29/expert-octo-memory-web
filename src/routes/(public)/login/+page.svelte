@@ -39,7 +39,7 @@
                 title: "Erro",
                 subtitle: response.message,
                 caption: new Date().toLocaleString(),
-                timeout: 3_000,
+                timeout: 1_500,
             };
         }
     }
