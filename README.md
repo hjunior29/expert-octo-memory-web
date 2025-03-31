@@ -61,7 +61,7 @@ expert-octo-memory-web/
 
 0. Iniciar API localmente
 
-[Instruções para rodar API localmente](https://github.com/hjunior29/expert-octo-memory-api.git)
+[Instruções para rodar API localmente](https://github.com/hjunior29/expert-octo-memory-api?tab=readme-ov-file#passos)
 
 1. Clone o repositório:
 
