@@ -2,6 +2,9 @@
 
 Bem-vindo ao repositório **Expert Octo Memory Web**! Este projeto é uma aplicação web moderna, construída com 💨 **Svelte**, ⚡ **Bun** como engine JavaScript, e 🗾 **TypeScript**. Ele visa explorar tecnologias leves e performáticas para construção de interfaces interativas. O projeto tem como objetivo facilitar o estudo por meio de flashcard utilizando Inteligência Artificial.
 
+O Projeto pode ser acessada via o link(caso ainda esteja em produção): [OCTO](https://expert-octo-memory.fly.dev/)
+
+
 ---
 
 ## 🏗️ Arquitetura do Projeto
