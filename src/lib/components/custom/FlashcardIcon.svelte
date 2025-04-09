@@ -49,6 +49,10 @@
                     on:click={() => dispatch("edit", { topicId, name })}
                 />
                 <OverflowMenuItem
+                    text="Compartilhar"
+                    on:click={() => dispatch("share", { topicId, name })}
+                />
+                <OverflowMenuItem
                     primaryFocus
                     danger
                     text="Deletar"
