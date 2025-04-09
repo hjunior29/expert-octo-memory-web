@@ -248,8 +248,16 @@
         getTopics();
     }
 
-    function handleEditTopic(updatedTopic: { topicId: number; name: string }) {
-        topic = { id: updatedTopic.topicId, name: updatedTopic.name };
+    function handleEditTopic(updatedTopic: {
+        topicId: number;
+        name: string;
+        description: string;
+    }) {
+        topic = {
+            id: updatedTopic.topicId,
+            name: updatedTopic.name,
+            description: updatedTopic.description,
+        };
         openEditTopicModal = true;
     }
 
@@ -311,6 +319,7 @@
                     folderId={folder.id!}
                     topicId={topics[i].id}
                     name={topics[i].name}
+                    description={topics[i].description}
                     on:edit={(e) => handleEditTopic(e.detail)}
                     on:share={(e) => handleShareTopic(e.detail)}
                     on:delete={(e) => handleDeleteTopic(e.detail)}
@@ -427,6 +436,12 @@
         labelText="Nome do tópico *"
         placeholder="Digite o nome do tópico...."
         bind:value={topic.name}
+    />
+    <br />
+    <TextInput
+        labelText="Descrição do tópico"
+        placeholder="Digite a descrição do tópico...."
+        bind:value={topic.description}
     />
 </Modal>
 

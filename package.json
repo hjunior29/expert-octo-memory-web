@@ -30,6 +30,7 @@
 		"@sveltejs/adapter-static": "^3.0.8",
 		"@types/node": "^22.13.9",
 		"carbon-components-svelte": "^0.87.6",
-		"carbon-icons-svelte": "^13.3.0"
+		"carbon-icons-svelte": "^13.3.0",
+		"pdf-lib": "^1.17.1"
 	}
 }

@@ -12,6 +12,7 @@
     export let folderId: number = 0;
     export let topicId: number = 0;
     export let name: string = "";
+    export let description: string = "";
 
     const dispatch = createEventDispatcher();
 </script>
@@ -46,7 +47,8 @@
             <OverflowMenu size="sm">
                 <OverflowMenuItem
                     text="Editar"
-                    on:click={() => dispatch("edit", { topicId, name })}
+                    on:click={() =>
+                        dispatch("edit", { topicId, name, description })}
                 />
                 <OverflowMenuItem
                     text="Compartilhar"

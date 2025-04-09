@@ -15,7 +15,7 @@
     } from "carbon-components-svelte";
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
-    import { generateBreadcrumbPaths } from "$lib/utils";
+    import { generateBreadcrumbPaths, generateFlashcardsPDF } from "$lib/utils";
 
     const pathname =
         typeof window !== "undefined" ? window.location.pathname : "";
@@ -83,11 +83,19 @@
             </BreadcrumbItem>
         {/each}
     </Breadcrumb>
-    <Button
-        on:click={() => {
-            goto(`/shared/${sharedId}/study`);
-        }}>Estudar tópico compartilhado</Button
-    >
+    <div class="flex gap-4">
+        <Button
+            kind="secondary"
+            on:click={() => {
+                generateFlashcardsPDF(flashcards, topic);
+            }}>Baixar PDF</Button
+        >
+        <Button
+            on:click={() => {
+                goto(`/shared/${sharedId}/study`);
+            }}>Estudar tópico compartilhado</Button
+        >
+    </div>
 </div>
 
 <br />

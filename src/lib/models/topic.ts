@@ -4,6 +4,6 @@ export interface Topic {
     updatedAt?: string;
     folderId?: number;
     name?: string;
-    description?: number;
+    description?: string;
     sharedId?: string;
 }
