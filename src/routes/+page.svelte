@@ -2,12 +2,23 @@
     import { goto } from "$app/navigation";
     import { apiRequest } from "$lib/api/utils";
     import type { ApiResponse } from "$lib/models/apiResponse";
-    import { Button, ButtonSet } from "carbon-components-svelte";
+    import type { Notification } from "$lib/models/notification";
+    import {
+        Button,
+        ButtonSet,
+        ProgressBar,
+        ToastNotification,
+    } from "carbon-components-svelte";
     import { onMount } from "svelte";
+    import { fade } from "svelte/transition";
 
     interface PingPong {
         message: string;
     }
+
+    let apiPingSuccess: boolean = false;
+    let notification: Notification = {};
+    let timeout: any = undefined;
 
     onMount(() => {
         apiWakeUp();
@@ -15,12 +26,10 @@
 
     async function apiWakeUp() {
         const start = Date.now();
-        let success = false;
+        apiPingSuccess = false;
         let attempts = 0;
 
-        console.log("Aguardando a API acordar...");
-
-        while (!success) {
+        while (!apiPingSuccess) {
             attempts++;
             const response = await apiRequest<ApiResponse<PingPong>>(
                 "ping",
@@ -28,23 +37,33 @@
             );
 
             if (response.status === 200) {
-                success = true;
+                apiPingSuccess = true;
                 const end = Date.now();
                 const duration = Math.round((end - start) / 1000);
-                console.log(
-                    `✅ A API demorou ${duration} segundos para responder após ${attempts} tentativa(s).\n`,
-                    response.message,
-                );
+                const message = `A API demorou ${duration} segundos para responder após ${attempts} tentativa(s).`;
+
+                notification = {
+                    kind: "success",
+                    title: "Sucesso",
+                    subtitle: message,
+                    caption: new Date().toLocaleString(),
+                    timeout: 3_000,
+                };
             } else {
-                console.log(
-                    `⚠️ Tentativa ${attempts} falhou. Tentando novamente em 10 segundos...\n`,
-                    response.message,
-                );
+                const message = `⚠️ Tentativa ${attempts} falhou. Tentando novamente em 10 segundos...\n${response.message}`;
+
+                notification = {
+                    kind: "error",
+                    title: "Erro",
+                    subtitle: message,
+                    caption: new Date().toLocaleString(),
+                    timeout: 3_000,
+                };
 
                 await new Promise((resolve) => setTimeout(resolve, 10_000));
             }
 
-            if (!success) {
+            if (!apiPingSuccess) {
                 await new Promise((resolve) => setTimeout(resolve, 5_000));
             }
         }
@@ -61,6 +80,7 @@
                 }}>Registro</Button
             >
             <Button
+                disabled={!apiPingSuccess}
                 kind="primary"
                 on:click={() => {
                     goto("/login");
@@ -69,3 +89,42 @@
         </ButtonSet>
     </div>
 </div>
+
+{#if notification.kind}
+    <div
+        class="fixed bottom-4 right-4 w-96 transition-opacity duration-300"
+        transition:fade
+    >
+        <ToastNotification
+            timeout={notification.timeout}
+            kind={notification.kind}
+            title={notification.title}
+            subtitle={notification.subtitle}
+            caption={notification.caption}
+            on:close={(e) => {
+                timeout = undefined;
+                notification = {};
+            }}
+        />
+    </div>
+{/if}
+
+{#if !apiPingSuccess}
+    <div
+        class="fixed bottom-4 right-4 w-96 transition-opacity duration-300"
+        transition:fade
+    >
+        <ToastNotification
+            timeout={notification.timeout}
+            kind="info"
+            title="Subindo API..."
+            caption={new Date().toLocaleString()}
+            hideCloseButton={true}
+            on:close={(e) => {
+                timeout = undefined;
+                notification = {};
+            }}
+        />
+        <ProgressBar size="sm" helperText="Api acordando..." class="w-9/12" />
+    </div>
+{/if}

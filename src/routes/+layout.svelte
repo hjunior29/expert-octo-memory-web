@@ -30,6 +30,9 @@
 			case path === "/folder":
 				title = "Pastas | OCTO 🚀";
 				break;
+			case path.includes("/shared"):
+				title = "Compartilhados | OCTO 🚀";
+				break;
 			case path.includes("/folder/") && !path.includes("/topic/"):
 				title = "Tópicos | OCTO 🚀";
 				break;
@@ -51,7 +54,7 @@
 	<title>{title}</title>
 </svelte:head>
 
-{#if $page.url.pathname != "/login" && $page.url.pathname != "/register" && $page.url.pathname != "/"}
+{#if $page.url.pathname != "/login" && $page.url.pathname != "/register" && $page.url.pathname != "/" && !$page.url.pathname.startsWith("/shared")}
 	<Header
 		persistentHamburgerMenu={true}
 		company="EXPERT"
@@ -72,7 +75,7 @@
 		<slot />
 	</Content>
 {:else}
-	<Header company="EXPERT" platformName="Octo Memory" href="/"></Header>
+	<Header company="Expert" platformName="OCTO Memory" href="/"></Header>
 	<Content>
 		<slot />
 	</Content>

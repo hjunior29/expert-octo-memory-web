@@ -19,9 +19,13 @@ export async function apiRequest<T>(
             "auth/register",
             "auth/verify",
         ];
+        const isPublicRoute =
+            publicRoutes.includes(endpoint) ||
+            endpoint.startsWith("topics/shared")
+
         const token = localStorage.getItem("token");
 
-        if (!publicRoutes.includes(endpoint) && !token) {
+        if (!isPublicRoute && !token) {
             localStorage.removeItem("token");
             window.location.href = "/login";
 

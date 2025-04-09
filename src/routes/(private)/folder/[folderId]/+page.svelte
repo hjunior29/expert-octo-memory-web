@@ -154,6 +154,7 @@
                 caption: new Date().toLocaleString(),
                 timeout: 3_000,
             };
+            openShareTopicModal = false;
         }
 
         isLoadingShare = false;
