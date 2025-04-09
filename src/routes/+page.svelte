@@ -74,6 +74,7 @@
     <div class="w-1/4">
         <ButtonSet class="flex justify-center !gap-3">
             <Button
+                disabled={!apiPingSuccess}
                 kind="secondary"
                 on:click={() => {
                     goto("/register");
@@ -90,11 +91,11 @@
     </div>
 </div>
 
-{#if notification.kind}
-    <div
-        class="fixed bottom-4 right-4 w-96 transition-opacity duration-300"
-        transition:fade
-    >
+<div
+    class="fixed bottom-4 right-4 w-96 transition-opacity duration-300"
+    transition:fade
+>
+    {#if notification.kind}
         <ToastNotification
             timeout={notification.timeout}
             kind={notification.kind}
@@ -106,14 +107,9 @@
                 notification = {};
             }}
         />
-    </div>
-{/if}
+    {/if}
 
-{#if !apiPingSuccess}
-    <div
-        class="fixed bottom-4 right-4 w-96 transition-opacity duration-300"
-        transition:fade
-    >
+    {#if !apiPingSuccess}
         <ToastNotification
             timeout={notification.timeout}
             kind="info"
@@ -126,5 +122,5 @@
             }}
         />
         <ProgressBar size="sm" helperText="Api acordando..." class="w-9/12" />
-    </div>
-{/if}
+    {/if}
+</div>

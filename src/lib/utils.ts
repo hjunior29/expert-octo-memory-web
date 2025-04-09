@@ -91,7 +91,7 @@ function wrapText(font: any, text: string, maxWidth: number, fontSize: number): 
     return lines;
 }
 
-export async function generateFlashcardsPDF(flashcards: Flashcard[], topic: Topic) {
+export async function generateFlashcardsPDF(flashcards: Flashcard[], topic: Topic): Promise<string> {
     const pdfDoc = await PDFDocument.create();
     const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
@@ -201,13 +201,13 @@ export async function generateFlashcardsPDF(flashcards: Flashcard[], topic: Topi
         });
     }
 
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${topic.name} - (${generateRandomString(5)}).pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        return url;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
 }

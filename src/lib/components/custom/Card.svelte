@@ -21,7 +21,7 @@
 >
     <button
         on:click={() => dispatch("open", { flashcardId })}
-        class="w-full text-left flex flex-col gap-3"
+        class="cursor-pointer w-full text-left flex flex-col gap-3"
         aria-label={title}
     >
         <h2 class="!p-2 !text-lg font-semibold leading-snug">
