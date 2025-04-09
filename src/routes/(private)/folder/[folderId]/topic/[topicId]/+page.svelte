@@ -19,7 +19,11 @@
     } from "carbon-components-svelte";
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
-    import { generateBreadcrumbPaths, generateFlashcardsPDF } from "$lib/utils";
+    import {
+        generateBreadcrumbPaths,
+        generateFlashcardsPDF,
+        generateRandomString,
+    } from "$lib/utils";
 
     const pathname =
         typeof window !== "undefined" ? window.location.pathname : "";
@@ -37,7 +41,6 @@
     let flashcardId: number = 0;
     let notification: Notification = {};
     let timeout: any = undefined;
-
     let topicId = page.params.topicId;
 
     onMount(() => {
@@ -141,6 +144,34 @@
         getFlashcards();
     }
 
+    async function handleDownloadPDF() {
+        const url = await generateFlashcardsPDF(flashcards, topic);
+
+        if (url) {
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${topic.name} - (${generateRandomString(5)}).pdf`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            notification = {
+                kind: "success",
+                title: "Sucesso",
+                subtitle: `PDF '${a.download}' gerado com sucesso.`,
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        } else {
+            notification = {
+                kind: "error",
+                title: "Erro",
+                subtitle: "Ocorreu um erro ao gerar o PDF.",
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        }
+    }
+
     function handleOpenFlashcard(event: CustomEvent) {
         flashcardId = event.detail.flashcardId;
         flashcard = flashcards.find((f) => f.id === flashcardId) || {};
@@ -148,7 +179,7 @@
     }
 </script>
 
-<div class="flex justify-between items-center">
+<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <Breadcrumb>
         {#each breadcrumbItems as item (item.href)}
             <BreadcrumbItem href={item.href} isCurrentPage={item.isCurrent}>
@@ -160,7 +191,7 @@
         <Button
             kind="secondary"
             on:click={() => {
-                generateFlashcardsPDF(flashcards, topic);
+                handleDownloadPDF();
             }}>Baixar PDF</Button
         >
         <Button
@@ -174,7 +205,7 @@
 <br />
 
 <div class="mt-10">
-    <div class="w-full flex flex-wrap gap-8">
+    <div class="w-full flex flex-wrap gap-6">
         {#each flashcards as flashcard}
             <Card
                 flashcardId={flashcard.id}

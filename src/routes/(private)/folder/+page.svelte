@@ -184,7 +184,7 @@
     }
 </script>
 
-<div class="flex justify-between items-center">
+<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <Breadcrumb>
         {#each breadcrumbItems as item (item.href)}
             <BreadcrumbItem href={item.href} isCurrentPage={item.isCurrent}>
