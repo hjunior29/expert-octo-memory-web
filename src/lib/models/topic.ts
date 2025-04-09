@@ -5,4 +5,5 @@ export interface Topic {
     folderId?: number;
     name?: string;
     description?: number;
+    sharedId?: string;
 }

@@ -6,6 +6,7 @@
         Breadcrumb,
         BreadcrumbItem,
         Button,
+        CodeSnippet,
         FileUploader,
         Loading,
         Modal,
@@ -25,7 +26,11 @@
     import FlashcardIcon from "$lib/components/custom/FlashcardIcon.svelte";
     import { AiGenerate } from "carbon-icons-svelte";
     import type { Flashcard, FlashcardGenerate } from "$lib/models/flashcard";
-    import { fileToBase64, generateBreadcrumbPaths } from "$lib/utils";
+    import {
+        fileToBase64,
+        generateBreadcrumbPaths,
+        getSharedUrl,
+    } from "$lib/utils";
 
     const pathname =
         typeof window !== "undefined" ? window.location.pathname : "";
@@ -46,8 +51,10 @@
     let timeout: any = undefined;
     let openGenerateFlashcardsModal: boolean = false;
     let openEditTopicModal: boolean = false;
+    let openShareTopicModal: boolean = false;
     let isGeneratingFlashcards: boolean = false;
     let isLoading: boolean = false;
+    let isLoadingShare: boolean = false;
 
     let folderId = page.params.folderId;
 
@@ -121,9 +128,45 @@
         getTopics();
     }
 
-    async function deleteTopic(topicId: number) {
+    async function shareTopic() {
+        if (!topic.id) {
+            topic.id = undefined;
+            return;
+        }
+
+        isLoadingShare = true;
+        openShareTopicModal = true;
+
         const response = await apiRequest<ApiResponse<Topic>>(
-            "topics/" + topicId,
+            "topics/" + topic.id + "/flashcards/share",
+            "GET",
+        );
+
+        if (response.status === 200) {
+            topic = {
+                sharedId: response.data?.sharedId,
+            };
+        } else {
+            notification = {
+                kind: "error",
+                title: "Erro",
+                subtitle: response.message,
+                caption: new Date().toLocaleString(),
+                timeout: 3_000,
+            };
+        }
+
+        isLoadingShare = false;
+    }
+
+    async function deleteTopic() {
+        if (!topic.id) {
+            topic.id = undefined;
+            return;
+        }
+
+        const response = await apiRequest<ApiResponse<Topic>>(
+            "topics/" + topic.id,
             "DELETE",
         );
 
@@ -209,9 +252,14 @@
         openEditTopicModal = true;
     }
 
+    function handleShareTopic({ topicId }: { topicId: number }) {
+        topic = { id: topicId };
+        shareTopic();
+    }
+
     function handleDeleteTopic({ topicId }: { topicId: number }) {
         topic = { id: topicId };
-        deleteTopic(topicId);
+        deleteTopic();
     }
 
     async function handleFileUpload() {
@@ -263,6 +311,7 @@
                     topicId={topics[i].id}
                     name={topics[i].name}
                     on:edit={(e) => handleEditTopic(e.detail)}
+                    on:share={(e) => handleShareTopic(e.detail)}
                     on:delete={(e) => handleDeleteTopic(e.detail)}
                 />
             {/each}
@@ -378,6 +427,22 @@
         placeholder="Digite o nome do tópico...."
         bind:value={topic.name}
     />
+</Modal>
+
+<Modal
+    passiveModal
+    bind:open={openShareTopicModal}
+    modalHeading="Compartilhar Tópico"
+    on:open
+    on:close={() => (topic.id = undefined)}
+>
+    <p>Compartilhe o link do tópico com quem deseja.</p>
+    <br />
+    {#if !isLoadingShare}
+        <CodeSnippet code={getSharedUrl(topic.sharedId ?? "")} />
+    {:else}
+        <CodeSnippet skeleton />
+    {/if}
 </Modal>
 
 {#if notification.kind}
