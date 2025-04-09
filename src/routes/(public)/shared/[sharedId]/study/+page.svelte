@@ -29,7 +29,7 @@
 
     async function getFlashcards() {
         const response = await apiRequest<ApiResponse<TopicAndFlashcards>>(
-            `topics/flashcards/${sharedId}`,
+            `topics/shared/${sharedId}`,
             "GET",
         );
 
