@@ -30,6 +30,7 @@ export function generateBreadcrumbPaths(pathname: string): BreadcrumbPath[] {
         let label = segment;
         if (label === 'folder') label = 'Pastas';
         else if (label === 'topic') label = 'Tópicos';
+        else if (label === 'shared') label = 'Compartilhados';
         else label = decodeURIComponent(label.replace(/-/g, ' '));
 
         paths.push({
@@ -50,3 +51,9 @@ export const formatPhoneNumber = (value: string): string => {
         .replace(/(\d{5})(\d{1,4})/, "$1-$2")
         .substring(0, 15);
 };
+
+export const getSharedUrl = (sharedId: string): string => {
+    const url = new URL(window.location.href);
+    return `${url.origin}/shared/${sharedId}`;
+};
+
