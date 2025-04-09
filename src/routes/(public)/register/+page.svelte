@@ -5,6 +5,7 @@
     import { fade } from "svelte/transition";
     import {
         Button,
+        ButtonSet,
         TextInput,
         ToastNotification,
     } from "carbon-components-svelte";
@@ -37,6 +38,14 @@
         );
 
         if (response.status === 201) {
+            localStorage.setItem(
+                "userCredentials",
+                JSON.stringify({
+                    email: user.email,
+                    password: user.password,
+                }),
+            );
+
             notification = {
                 kind: "success",
                 title: "Sucesso",
@@ -44,6 +53,10 @@
                 caption: new Date().toLocaleString(),
                 timeout: 3_000,
             };
+
+            setTimeout(() => {
+                goto("/login");
+            }, 2000);
         } else {
             notification = {
                 kind: "error",
@@ -53,15 +66,11 @@
                 timeout: 3_000,
             };
         }
-
-        setTimeout(() => {
-            goto("/login");
-        }, 3000);
     }
 </script>
 
-<div class="flex items-center justify-center !mt-20 w-full">
-    <div class="w-1/4 flex flex-col gap-4">
+<div class="flex items-center justify-center !mt-20">
+    <div class="flex flex-col gap-4">
         <div class="flex justify-between gap-4">
             <TextInput
                 invalid={user.firstName === undefined}
@@ -101,9 +110,15 @@
             type="password"
             bind:value={user.password}
         />
-        <div class="flex justify-end">
+        <ButtonSet class="flex w-1/2">
+            <Button
+                kind="secondary"
+                on:click={() => {
+                    goto("/login");
+                }}>Login</Button
+            >
             <Button on:click={register}>Registrar</Button>
-        </div>
+        </ButtonSet>
     </div>
 </div>
 

@@ -70,57 +70,60 @@
     }
 </script>
 
-<div class="flex items-center justify-center !mt-20 w-full">
-    <div class="w-1/4">
-        <ButtonSet class="flex justify-center !gap-3">
-            <Button
-                disabled={!apiPingSuccess}
-                kind="secondary"
-                on:click={() => {
-                    goto("/register");
-                }}>Registro</Button
-            >
-            <Button
-                disabled={!apiPingSuccess}
-                kind="primary"
-                on:click={() => {
-                    goto("/login");
-                }}>Login</Button
-            >
-        </ButtonSet>
-    </div>
+<div class="flex items-center justify-center !mt-20">
+    <ButtonSet class="flex justify-center">
+        <Button
+            disabled={!apiPingSuccess}
+            kind="secondary"
+            on:click={() => {
+                goto("/register");
+            }}>Registro</Button
+        >
+        <Button
+            disabled={!apiPingSuccess}
+            kind="primary"
+            on:click={() => {
+                goto("/login");
+            }}>Login</Button
+        >
+    </ButtonSet>
 </div>
 
-<div
-    class="fixed bottom-4 right-4 w-96 transition-opacity duration-300"
-    transition:fade
->
+<div class="fixed bottom-4 right-4 w-96">
     {#if notification.kind}
-        <ToastNotification
-            timeout={notification.timeout}
-            kind={notification.kind}
-            title={notification.title}
-            subtitle={notification.subtitle}
-            caption={notification.caption}
-            on:close={(e) => {
-                timeout = undefined;
-                notification = {};
-            }}
-        />
+        <div class="transition-opacity duration-300" transition:fade>
+            <ToastNotification
+                timeout={notification.timeout}
+                kind={notification.kind}
+                title={notification.title}
+                subtitle={notification.subtitle}
+                caption={notification.caption}
+                on:close={(e) => {
+                    timeout = undefined;
+                    notification = {};
+                }}
+            />
+        </div>
     {/if}
 
     {#if !apiPingSuccess}
-        <ToastNotification
-            timeout={notification.timeout}
-            kind="info"
-            title="Subindo API..."
-            caption={new Date().toLocaleString()}
-            hideCloseButton={true}
-            on:close={(e) => {
-                timeout = undefined;
-                notification = {};
-            }}
-        />
-        <ProgressBar size="sm" helperText="Api acordando..." class="w-9/12" />
+        <div class="transition-opacity duration-300" transition:fade>
+            <ToastNotification
+                timeout={notification.timeout}
+                kind="info"
+                title="Subindo API..."
+                caption={new Date().toLocaleString()}
+                hideCloseButton={true}
+                on:close={(e) => {
+                    timeout = undefined;
+                    notification = {};
+                }}
+            />
+            <ProgressBar
+                size="sm"
+                helperText="Api acordando..."
+                class="w-9/12"
+            />
+        </div>
     {/if}
 </div>

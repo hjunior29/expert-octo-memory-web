@@ -12,10 +12,22 @@
         ToastNotification,
     } from "carbon-components-svelte";
     import { fade } from "svelte/transition";
+    import { onMount } from "svelte";
 
     let user: User = {};
     let notification: Notification = {};
     let timeout: any = undefined;
+
+    onMount(() => {
+        if (typeof localStorage !== "undefined") {
+            const stored = localStorage.getItem("userCredentials");
+            if (stored) {
+                const creds = JSON.parse(stored);
+                user.email = creds.email;
+                user.password = creds.password;
+            }
+        }
+    });
 
     async function login() {
         if (!user.email || !user.password) {
@@ -39,14 +51,14 @@
                 title: "Erro",
                 subtitle: response.message,
                 caption: new Date().toLocaleString(),
-                timeout: 1_500,
+                timeout: 3_000,
             };
         }
     }
 </script>
 
-<div class="flex items-center justify-center !mt-20 w-full">
-    <div class="w-1/4 flex flex-col gap-4">
+<div class="flex items-center justify-center !mt-20">
+    <div class="flex flex-col gap-4">
         <TextInput
             invalid={user.email === undefined}
             invalidText="E-mail é obrigatório."
@@ -62,12 +74,12 @@
             type="password"
             bind:value={user.password}
         />
-        <ButtonSet class="flex justify-center !gap-3">
+        <ButtonSet class="flex w-1/2">
             <Button
                 kind="secondary"
                 on:click={() => {
                     goto("/register");
-                }}>Registro</Button
+                }}>Registrar</Button
             >
             <Button on:click={login}>Login</Button>
         </ButtonSet>
