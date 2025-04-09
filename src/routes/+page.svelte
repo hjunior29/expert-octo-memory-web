@@ -50,7 +50,7 @@
                     timeout: 3_000,
                 };
             } else {
-                const message = `⚠️ Tentativa ${attempts} falhou. Tentando novamente em 10 segundos...\n${response.message}`;
+                const message = `Tentativa ${attempts} falhou. Tentando novamente em 10 segundos...\n${response.message}`;
 
                 notification = {
                     kind: "error",
