@@ -13,39 +13,39 @@
 	import { browser } from "$app/environment";
 
 	let isSideNavOpen: boolean = false;
-	let title: string = "OCTO 🚀";
+	let title: string = "OCTO";
 
 	$: path = $page.url.pathname;
 	$: if (browser) {
 		switch (true) {
 			case path === "/":
-				title = "OCTO 🚀";
+				title = "OCTO";
 				break;
 			case path === "/login":
-				title = "Login | OCTO 🚀";
+				title = "Login | OCTO";
 				break;
 			case path === "/register":
-				title = "Registro | OCTO 🚀";
+				title = "Registro | OCTO";
 				break;
 			case path === "/folder":
-				title = "Pastas | OCTO 🚀";
+				title = "Pastas | OCTO";
 				break;
 			case path.includes("/shared"):
-				title = "Compartilhados | OCTO 🚀";
+				title = "Compartilhados | OCTO";
 				break;
 			case path.includes("/folder/") && !path.includes("/topic/"):
-				title = "Tópicos | OCTO 🚀";
+				title = "Tópicos | OCTO";
 				break;
 			case path.includes("/topic/") &&
 				!path.includes("/flashcard/") &&
 				!path.includes("/study"):
-				title = "Flashcards | OCTO 🚀";
+				title = "Flashcards | OCTO";
 				break;
 			case path.includes("/study"):
-				title = "Estudo | OCTO 🚀";
+				title = "Estudo | OCTO";
 				break;
 			default:
-				title = "OCTO 🚀";
+				title = "OCTO";
 		}
 	}
 </script>
@@ -58,7 +58,7 @@
 	<Header
 		persistentHamburgerMenu={true}
 		company="Expert"
-		platformName="Octo Memory"
+		platformName="OCTO Memory"
 		href="/"
 		bind:isSideNavOpen
 	></Header>
