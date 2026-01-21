@@ -57,7 +57,7 @@
 {#if $page.url.pathname != "/login" && $page.url.pathname != "/register" && $page.url.pathname != "/" && !$page.url.pathname.startsWith("/shared")}
 	<Header
 		persistentHamburgerMenu={true}
-		company="EXPERT"
+		company="Expert"
 		platformName="Octo Memory"
 		href="/"
 		bind:isSideNavOpen
